@@ -1,4 +1,5 @@
 from typing import Union, List, Dict
+from csv import DictReader
 
 
 def get_max_salary(path: str) -> int:
@@ -16,7 +17,15 @@ def get_max_salary(path: str) -> int:
     int
         The maximum salary paid out of all job opportunities
     """
-    raise NotImplementedError
+
+    with open(path, "r") as file:
+        file_reader = DictReader(file, delimiter=",")
+        max_salary = 0
+        for row in file_reader:
+            curr_salary = row["max_salary"]
+            if curr_salary.isnumeric() and int(curr_salary) > max_salary:
+                max_salary = int(curr_salary)
+        return max_salary
 
 
 def get_min_salary(path: str) -> int:
@@ -64,8 +73,7 @@ def matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
 
 
 def filter_by_salary_range(
-    jobs: List[dict],
-    salary: Union[str, int]
+    jobs: List[dict], salary: Union[str, int]
 ) -> List[Dict]:
     """Filters a list of jobs by salary range
 
@@ -82,3 +90,6 @@ def filter_by_salary_range(
         Jobs whose salary range contains `salary`
     """
     raise NotImplementedError
+
+
+# print(get_max_salary("./data/jobs.csv"))  # DEBUG
