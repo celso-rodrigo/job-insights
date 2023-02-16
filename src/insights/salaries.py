@@ -20,12 +20,11 @@ def get_max_salary(path: str) -> int:
 
     with open(path, "r") as file:
         file_reader = DictReader(file, delimiter=",")
-        max_salary = 0
+        salaries = []
         for row in file_reader:
-            curr_salary = row["max_salary"]
-            if curr_salary.isnumeric() and int(curr_salary) > max_salary:
-                max_salary = int(curr_salary)
-        return max_salary
+            if row["max_salary"].isnumeric():
+                salaries.append(int(row["max_salary"]))
+        return max(salaries)
 
 
 def get_min_salary(path: str) -> int:
@@ -43,7 +42,13 @@ def get_min_salary(path: str) -> int:
     int
         The minimum salary paid out of all job opportunities
     """
-    raise NotImplementedError
+    with open(path, "r") as file:
+        file_reader = DictReader(file, delimiter=",")
+        salaries = []
+        for row in file_reader:
+            if row["min_salary"].isnumeric():
+                salaries.append(int(row["min_salary"]))
+        return min(salaries)
 
 
 def matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
@@ -92,4 +97,4 @@ def filter_by_salary_range(
     raise NotImplementedError
 
 
-# print(get_max_salary("./data/jobs.csv"))  # DEBUG
+# print(get_min_salary("./data/jobs.csv"))  # DEBUG
