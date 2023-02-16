@@ -41,7 +41,12 @@ def filter_by_industry(jobs: List[Dict], industry: str) -> List[Dict]:
     list
         List of jobs with provided industry
     """
-    raise NotImplementedError
+
+    filtered_industries = []
+    for job in jobs:
+        if job["industry"] == industry:
+            filtered_industries.append(job)
+    return filtered_industries
 
 
-# get_unique_industries("./data/jobs.csv")  # DEBUG
+# print(filter_by_job_type(read("./data/jobs.csv"), 'FULL_TIME'))  # DEBUG
