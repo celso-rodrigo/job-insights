@@ -1,4 +1,5 @@
 from typing import List, Dict
+from csv import DictReader
 
 
 def get_unique_industries(path: str) -> List[str]:
@@ -16,7 +17,13 @@ def get_unique_industries(path: str) -> List[str]:
     list
         List of unique industries
     """
-    raise NotImplementedError
+    with open(path, "r") as file:
+        file_reader = DictReader(file, delimiter=",")
+        industries = set()
+        for row in file_reader:
+            if len(row["industry"]) > 0:
+                industries.add(row["industry"])
+        return industries
 
 
 def filter_by_industry(jobs: List[Dict], industry: str) -> List[Dict]:
@@ -35,3 +42,6 @@ def filter_by_industry(jobs: List[Dict], industry: str) -> List[Dict]:
         List of jobs with provided industry
     """
     raise NotImplementedError
+
+
+# get_unique_industries("./data/jobs.csv")  # DEBUG
