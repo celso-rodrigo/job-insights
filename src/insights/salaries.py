@@ -51,7 +51,7 @@ def get_min_salary(path: str) -> int:
         return min(salaries)
 
 
-def validate_matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
+def validate_salary_range_inputs(job: Dict, salary: Union[int, str]) -> bool:
     """Validate matches_salary_range params
 
     Parameters
@@ -75,11 +75,13 @@ def validate_matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
         raise ValueError
     min_salary = job["min_salary"]
     max_salary = job["max_salary"]
-    if not isinstance(min_salary, int) or not isinstance(max_salary, int):
+    inputs = [min_salary, max_salary, salary]
+    all_numeric = all(
+        isinstance(salary, int) or str(salary).isdigit() for salary in inputs
+    )
+    if not all_numeric:
         raise ValueError
-    if min_salary > max_salary:
-        raise ValueError
-    if not isinstance(min_salary, int):
+    if int(min_salary) > int(max_salary):
         raise ValueError
 
 
@@ -99,8 +101,10 @@ def matches_salary_range(job: Dict, salary: Union[int, str]) -> bool:
         True if the salary is in the salary range of the job, False otherwise
     """
 
-    validate_matches_salary_range(job, salary)
-    return job["min_salary"] <= int(salary) <= job["max_salary"]
+    validate_salary_range_inputs(job, salary)
+    min_salary = int(job["min_salary"])
+    max_salary = int(job["max_salary"])
+    return min_salary <= int(salary) <= max_salary
 
 
 def filter_by_salary_range(
@@ -120,7 +124,16 @@ def filter_by_salary_range(
     list
         Jobs whose salary range contains `salary`
     """
-    raise NotImplementedError
+
+    filtered_jobs = []
+    for job in jobs:
+        try:
+            if matches_salary_range(job, salary):
+                filtered_jobs.append(job)
+        except ValueError:
+            continue
+
+    return filtered_jobs
 
 
 # print(get_min_salary("./data/jobs.csv"))  # DEBUG
